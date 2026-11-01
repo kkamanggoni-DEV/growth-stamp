@@ -1,0 +1,9 @@
+{
+  "id": "growth-stamp",
+  "name": "Growth Stamp",
+  "version": "1.0.0",
+  "minAppVersion": "1.8.7",
+  "description": "Stamp the time, dates, start and end with duration, your own phrases, and random affirmations from the mobile toolbar, and copy a whole heading section in one tap.",
+  "author": "Kmgn",
+  "isDesktopOnly": false
+}

@@ -1,0 +1,186 @@
+/* ───── Growth Stamp — settings ───── */
+.kst { padding-bottom: 48px; }
+.kst .kst-desc,
+.kst .kst-sec-sub {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  line-height: 1.5;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+.kst .kst-gap { margin-top: 12px; }
+.kst .is-hidden { display: none; }
+
+/* 섹션 */
+.kst-sec { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--background-modifier-border); }
+.kst-sec:first-child { margin-top: 0; padding-top: 4px; border-top: 0; }
+.kst-sec-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 1.3em; font-weight: 700; color: var(--text-normal); line-height: 1.3;
+}
+/* 번호 배지: 글꼴과 상관없이 같은 크기의 원 */
+.kst-num {
+  flex: none; box-sizing: border-box; width: 1.45em; height: 1.45em; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--interactive-accent); color: var(--text-on-accent);
+  font-size: .72em; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums;
+}
+.kst-sec-sub { margin: 6px 0 0; }
+.kst-sec-body { margin-top: 16px; }
+
+/* 항목 */
+.kst-field { margin-bottom: 20px; }
+.kst-field:last-child { margin-bottom: 0; }
+.kst-label { font-weight: 600; color: var(--text-normal); margin-bottom: 2px; }
+.kst-field .kst-desc { margin-bottom: 8px; }
+.kst .kst-input { width: 100%; box-sizing: border-box; font-family: var(--font-monospace); }
+.kst textarea.kst-input { min-height: 64px; resize: vertical; line-height: 1.5; }
+.kst .kst-btn, .kst .kst-seg button, .kst .kst-group button { cursor: pointer; }
+
+/* 반올림 단위: 한 줄로 묶인 선택 막대 */
+.kst-group {
+  display: flex; align-items: stretch;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  overflow: hidden; margin-top: 4px;
+}
+.kst-group button {
+  flex: 1; border: 0; border-radius: 0; box-shadow: none;
+  background: transparent; color: var(--text-normal);
+  padding: 10px 0; height: auto;
+}
+.kst-group button + button, .kst-group .kst-group-input { border-left: 1px solid var(--background-modifier-border); }
+.kst-group button.is-active { background: var(--interactive-accent); color: var(--text-on-accent); }
+.kst-group-input { flex: 1.5; display: flex; }
+.kst-group-input input {
+  width: 100%; min-width: 0; text-align: center;
+  border: 0; border-radius: 0; box-shadow: none; background: transparent;
+  font-family: inherit; padding: 10px 4px; height: auto;
+  -moz-appearance: textfield;
+}
+.kst-group-input input::-webkit-outer-spin-button,
+.kst-group-input input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.kst-group-input.is-active { background: var(--interactive-accent); }
+.kst-group-input.is-active input { color: var(--text-on-accent); font-weight: 600; }
+
+/* 형태 고르기 목록 */
+.kst-presets { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.kst-preset {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border); cursor: pointer;
+}
+.kst-preset.is-selected { border-color: var(--interactive-accent); box-shadow: 0 0 0 1px var(--interactive-accent); }
+.kst-radio {
+  flex: none; width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--text-faint); box-sizing: border-box;
+}
+.kst-preset.is-selected .kst-radio {
+  border-color: var(--interactive-accent); background: var(--interactive-accent);
+  box-shadow: inset 0 0 0 3px var(--background-secondary);
+}
+.kst-preset-line { line-height: 1.5; word-break: keep-all; min-width: 0; }
+.kst .kst-preset-line p, .kst .kst-preview-line p { margin: 0; }
+
+/* 입력되는 글자 강조 (띄어쓰기도 보이게) */
+.kst-ins {
+  white-space: pre;
+  background: var(--background-modifier-active-hover);
+  color: var(--text-accent);
+  font-family: var(--font-monospace);
+  border-radius: 4px; padding: 1px 0;
+}
+
+/* 미리보기 */
+.kst-preview {
+  margin: 18px 0 20px; padding: 14px 16px;
+  background: var(--background-secondary);
+  border: 1px dashed var(--background-modifier-border-hover);
+  border-radius: var(--radius-m);
+}
+.kst-tag {
+  display: inline-block; margin-bottom: 10px; padding: 2px 10px;
+  border-radius: 999px; font-size: var(--font-ui-smaller); font-weight: 700;
+  background: var(--background-modifier-active-hover); color: var(--text-accent);
+}
+.kst-preview-cap { font-size: var(--font-ui-smaller); color: var(--text-faint); margin-top: 10px; }
+.kst-preview-line { font-size: 1.05em; line-height: 1.6; white-space: pre-wrap; word-break: keep-all; }
+.kst-preview-note { margin-top: 12px; font-size: var(--font-ui-smaller); color: var(--text-faint); line-height: 1.5; }
+
+/* 기호 안내 */
+.kst-tokens { margin-top: 8px; color: var(--text-faint); font-size: var(--font-ui-smaller); }
+.kst-tokens summary { cursor: pointer; }
+.kst-token-table { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; margin-top: 8px; }
+.kst-tok { font-family: var(--font-monospace); color: var(--text-accent); }
+.kst-tok-ex { font-family: var(--font-monospace); color: var(--text-faint); }
+
+/* 날짜 버튼 카드: 배경색으로 구분 */
+.kst-card {
+  background: var(--background-primary-alt);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  padding: 14px; margin-bottom: 14px;
+}
+.kst-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 16px; }
+.kst-card-title { font-weight: 700; font-size: 1.1em; min-width: 0; overflow-wrap: anywhere; }
+.kst-card-title.is-placeholder { color: var(--text-muted); font-weight: 600; }
+.kst-card .kst-preset, .kst-card .kst-preview, .kst-card .kst-group { background: var(--background-primary); }
+.kst .kst-danger { color: var(--text-error); flex: none; }
+
+/* 아이콘 선택 */
+.kst-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; }
+.kst-icon-btn {
+  width: 44px; height: 44px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid transparent; cursor: pointer;
+}
+.kst-icon-btn .svg-icon { width: 22px; height: 22px; }
+.kst-icon-btn.is-active { border-color: var(--interactive-accent); color: var(--interactive-accent); }
+
+/* 추가 버튼, 확언, 단축키 */
+.kst-add { margin-top: 4px; }
+.kst-add .kst-btn { width: 100%; margin-bottom: 8px; }
+.kst-sec-body > .kst-btn { width: 100%; }
+.kst-status { margin-top: 10px; font-size: var(--font-ui-small); color: var(--text-muted); }
+.kst-status.is-ok { color: var(--text-success); }
+.kst-status.is-bad { color: var(--text-error); }
+
+/* 삭제 확인 창 */
+.kst-modal-buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+/* 예시 칩 */
+.kst-chip {
+  border-radius: 999px; padding: 4px 14px; height: auto;
+  background: var(--background-primary); border: 1px solid var(--background-modifier-border);
+  cursor: pointer;
+}
+
+/* 확언: 만들어지는 버튼 목록, 뽑기 테스트 */
+.kst .kst-gap-top { margin-top: 20px; }
+.kst-cmd-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.kst-cmd-row {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+}
+.kst-cmd-icon { flex: none; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.kst-cmd-icon .svg-icon { width: 22px; height: 22px; }
+.kst-cmd-name { font-weight: 600; }
+.kst-box {
+  margin-top: 10px; padding: 12px 14px; line-height: 1.6; word-break: keep-all;
+  background: var(--background-primary);
+  border: 1px dashed var(--background-modifier-border-hover);
+  border-radius: var(--radius-m);
+}
+
+.kst-line-list {
+  margin-top: 8px; max-height: 220px; overflow: auto; padding: 8px 12px;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  color: var(--text-muted); font-size: var(--font-ui-small); line-height: 1.6;
+}
+.kst-line-list > div { padding: 2px 0; word-break: keep-all; }
