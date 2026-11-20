@@ -184,3 +184,51 @@
   color: var(--text-muted); font-size: var(--font-ui-small); line-height: 1.6;
 }
 .kst-line-list > div { padding: 2px 0; word-break: keep-all; }
+
+/* 확언 뽑는 기준 (접어 두기) */
+.kst-rule-box { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; line-height: 1.5; word-break: keep-all; }
+
+/* PC 버튼: 노트 위쪽 미리보기 막대와 고르기 목록 */
+.kst-header-bar {
+  display: flex; align-items: center; justify-content: flex-end; gap: 4px;
+  min-height: 44px; padding: 6px 10px; box-sizing: border-box;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+}
+.kst-header-icons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 2px; min-width: 0; }
+.kst-header-icon, .kst-header-fixed > div {
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; color: var(--text-normal);
+}
+.kst-header-icon { background: var(--background-modifier-active-hover); color: var(--text-accent); }
+.kst-header-fixed { display: flex; gap: 2px; padding-left: 6px; margin-left: 4px; border-left: 1px solid var(--background-modifier-border); }
+.kst-header-fixed > div { color: var(--text-faint); }
+.kst-header-icon .svg-icon, .kst-header-fixed .svg-icon { width: 18px; height: 18px; }
+.kst-header-empty { color: var(--text-faint); font-size: var(--font-ui-smaller); }
+.kst .kst-bar-cap { margin: 6px 0 12px; text-align: right; }
+.kst-pick-list { display: flex; flex-direction: column; gap: 6px; }
+.kst-pick {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px; cursor: pointer;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+}
+.kst-pick-name { flex: 1; min-width: 0; line-height: 1.4; word-break: keep-all; }
+.kst-check {
+  flex: none; width: 18px; height: 18px; border-radius: 5px; box-sizing: border-box;
+  border: 2px solid var(--text-faint);
+}
+.kst-pick.is-selected { border-color: var(--interactive-accent); }
+.kst-pick.is-selected .kst-cmd-icon { color: var(--text-accent); }
+.kst-pick.is-selected .kst-check {
+  border-color: var(--interactive-accent); background: var(--interactive-accent);
+  box-shadow: inset 0 0 0 3px var(--background-secondary);
+}
+.kst .kst-pick-hint { margin-bottom: 8px; }
+.kst-pick { padding: 4px 6px 4px 12px; gap: 4px; }
+.kst-pick-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 6px 0; cursor: pointer; }
+.kst .kst-move { background: transparent; border: 0; box-shadow: none; border-radius: 6px; flex: none; width: 34px; height: 34px; padding: 0; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.kst .kst-move:disabled { opacity: .3; cursor: default; }
+.kst-move .svg-icon { width: 18px; height: 18px; }
+.kst .kst-move:not(:disabled):hover { background: var(--background-modifier-hover, rgba(255,255,255,.06)); color: var(--text-normal); }

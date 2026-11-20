@@ -26,10 +26,14 @@ Made for people who grow by writing things down: daily logs, journals, habit not
 ## Getting started
 
 1. Install and enable **Growth Stamp**.
-2. Go to **Settings → Mobile → Toolbar options** and add the Growth Stamp commands you want.
+2. On mobile, go to **Settings → Mobile → Toolbar options** and add the Growth Stamp commands you want. On desktop, pick buttons in **Desktop buttons** and they appear at the top of every note.
 3. Open the **Growth Stamp** settings and pick your styles. Each style shows a live preview of exactly what will be typed.
 
 ![Settings with live preview](images/settings.png)
+
+## On desktop
+
+Pick any of the buttons above in the **Desktop buttons** section of the settings. They sit at the top right of every note, next to the reading view button. You can also give each command a hotkey in **Settings → Hotkeys**.
 
 ## Make it yours
 
@@ -88,8 +92,12 @@ Growth Stamp works fully offline and makes no network requests. Your settings st
 ### 시작하기
 
 1. **Growth Stamp**를 설치하고 켜세요.
-2. **설정 → 모바일 → 툴바 옵션**에서 원하는 Growth Stamp 명령을 추가하세요.
+2. 모바일은 **설정 → 모바일 → 툴바 옵션**에서 원하는 Growth Stamp 명령을 추가하세요. PC는 플러그인 설정의 **PC 버튼**에서 고르면 모든 노트 위쪽에 버튼이 생겨요.
 3. **Growth Stamp** 설정에서 마음에 드는 형태를 고르세요. 형태를 고르는 곳마다 실제로 입력될 모습이 미리보기로 나와요.
+
+### PC에서 쓰기
+
+설정의 **PC 버튼**에서 위 버튼 중 원하는 것을 고르세요. 노트 오른쪽 위, 읽기 보기 버튼 옆에 나타나요. **설정 → 단축키**에서 명령마다 단축키를 지정할 수도 있어요.
 
 ### 랜덤 확언을 뽑는 기준
 

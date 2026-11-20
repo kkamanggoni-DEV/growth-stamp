@@ -11,6 +11,8 @@ const {
   setIcon,
   normalizePath,
   getLanguage,
+  MarkdownView,
+  Platform,
 } = obsidian;
 
 // ───────────── 아이콘 (모바일 툴바 옵션에 보임) ─────────────
@@ -47,7 +49,6 @@ const RANGE_PRESETS = [
 const STR = {
   ko: {
     langLabel: "언어 (Language)",
-    langDesc: "설명과 예시가 한국어 기준으로 표시돼요.",
     cmdTime: "현재 시간 입력",
     cmdDate: "오늘 날짜 입력",
     cmdAff: "확언 메모 열기",
@@ -55,7 +56,7 @@ const STR = {
     timeTitle: "현재 시간",
     timeSub: "누르면 현재 시각이 입력돼요.",
     roundLabel: "반올림 단위",
-    roundDesc: "가까운 N분 단위로 시각을 맞춰요. 직접 입력할 때 1을 넣으면 반올림하지 않아요.",
+    roundDesc: "직접 입력에 1을 넣으면 반올림하지 않아요.",
     minutes: "분",
     customShort: "직접 입력",
     formatLabel: "입력 형태",
@@ -70,21 +71,19 @@ const STR = {
     nowNoRound: (a) => `지금 ${a} (반올림 없음)`,
 
     dateTitle: "오늘 날짜",
-    dateSub: "누르면 오늘 날짜가 입력돼요. 일상용, 자기계발용처럼 형태가 다른 버튼을 여러 개 만들 수 있어요.",
+    dateSub: "형태가 다른 날짜 버튼을 여러 개 만들 수 있어요.",
     dateCard: (n) => `날짜 버튼 ${n}`,
     nameLabel: "버튼 이름",
-    nameDesc: "툴바에 올릴 때 구분할 이름이에요.",
+    nameDesc: "툴바와 명령 목록에 보이는 이름이에요.",
     namePh: "예) 요일 포함, 기울임",
     dateFormatLabel: "날짜 형태",
     dateSample: "화장실 청소",
     iconLabel: "아이콘",
-    iconDesc: "툴바에 보일 모양이에요.",
     remove: "삭제",
     cancel: "취소",
     removeTitle: (name) => `'${name}' 버튼을 삭제할까요?`,
     removeDesc: "이 버튼의 설정이 사라져요.",
     addDate: "＋ 날짜 버튼 추가",
-    addDateDesc: "형태가 다른 날짜 버튼을 하나 더 만들어요. 툴바 옵션의 명령 목록에 바로 나타나요.",
 
     affTitle: "내 확언",
     affSub: "메모를 열거나 한 줄을 무작위로 뽑아요.",
@@ -121,37 +120,39 @@ const STR = {
     textDesc: "끝의 띄어쓰기도 그대로 입력돼요.",
     textPh: "예) - [ ] ",
     addPhrase: "＋ 문구 버튼 추가",
-    addPhraseDesc: "문구 버튼을 하나 더 만들어요. 아래 예시를 눌러 바로 시작할 수도 있어요.",
     exampleLabel: "예시로 시작",
     examples: [["체크박스", "- [ ] "], ["회고 태그", "#회고 "], ["배운 점", "배운 점: "]],
     randomEmpty: "뽑을 확언 줄이 없어요.",
 
     cmdCopy: "헤딩 복사",
     copyTitle: "헤딩 복사",
-    copySub: "커서 아래 헤딩과 하위 내용을 복사해요.",
-    copyHowLabel: "사용법",
-    copyHow1: "헤딩 아래에 커서를 두고 버튼을 누르면 그 헤딩과 하위 내용이 클립보드에 복사돼요.",
-    copyHow2: "붙여넣기는 평소처럼 하면 돼요.",
+    copySub: "커서가 있는 헤딩과 그 아래 내용을 통째로 복사해요. 붙여넣기는 평소처럼 하면 돼요.",
     copied: (title, n) => `복사했어요: ${title} (${n}줄)`,
     copyFail: "복사하지 못했어요.",
     copyNoHeading: "헤딩 아래에 커서를 두고 눌러 주세요.",
 
-    affRuleLabel: "뽑는 기준",
+    affRuleLabel: "뽑는 기준 보기",
     affRule1: "메모 안의 글줄을 하나씩 뽑아요. 목록(- , 1.)과 인용(>) 기호는 떼고 내용만 써요.",
     affRule2: "빼는 줄: 제목(# 다음에 띄어쓰기), 구분선, 빈 줄, 맨 위 속성 영역, %% 주석",
     affRule3: "같은 줄이 연속으로 나오지 않아요.",
     affLinesSummary: (n) => `뽑을 수 있는 줄 보기 (${n})`,
 
     affButtonsLabel: "만들어지는 버튼",
-    affOpenDesc: "메모를 바로 열어요.",
-    affShowDesc: "한 줄을 알림으로 보여 줘요.",
-    affInsertDesc: "한 줄을 커서 위치에 써 줘요.",
     affTestBtn: "한 줄 뽑아 보기",
     affTestLabel: "뽑기 테스트",
 
     hotkeyTitle: "단축키와 모바일 툴바",
-    hotkeyDesc: "단축키: 옵시디언 설정 → 단축키에서 Growth Stamp를 검색해 지정하세요.",
-    toolbarHint: "모바일 툴바: 옵시디언 설정 → 모바일 → 툴바 옵션에서 이 플러그인의 명령을 추가하세요.",
+    hotkeyDesc: "단축키: 설정 → 단축키에서 Growth Stamp를 검색하세요.",
+    toolbarHint: "모바일 툴바: 설정 → 모바일 → 툴바 옵션에서 명령을 추가하세요.",
+
+    pcTitle: "PC 버튼",
+    pcSub: "노트 위쪽에 둘 버튼을 고르세요. PC에서만 보여요.",
+    pcPreview: "노트 위쪽에 보일 모습",
+    pcNone: "고른 버튼이 없어요",
+    pcCount: (n) => `${n}개 고름`,
+    pcOrder: "목록 위쪽 버튼이 노트 왼쪽에 와요. 화살표로 순서를 바꿔요.",
+    moveUp: "위로",
+    moveDown: "아래로",
 
     tokens: [
       ["HH", "시 (24시간, 두 자리)", "08"],
@@ -170,7 +171,6 @@ const STR = {
   },
   en: {
     langLabel: "Language (언어)",
-    langDesc: "Descriptions and examples are shown in English.",
     cmdTime: "Insert current time",
     cmdDate: "Insert today's date",
     cmdAff: "Open affirmation note",
@@ -178,7 +178,7 @@ const STR = {
     timeTitle: "Current time",
     timeSub: "Tap to type the current time.",
     roundLabel: "Round to",
-    roundDesc: "Rounds to the nearest N minutes. Type 1 in the custom box for no rounding.",
+    roundDesc: "Type 1 in the custom box for no rounding.",
     minutes: "min",
     customShort: "Custom",
     formatLabel: "Output style",
@@ -193,21 +193,19 @@ const STR = {
     nowNoRound: (a) => `Now ${a} (no rounding)`,
 
     dateTitle: "Today's date",
-    dateSub: "Tap to type today's date. Add more buttons for other styles, e.g. daily log or journal.",
+    dateSub: "Make as many date buttons as you like, each in its own style.",
     dateCard: (n) => `Date button ${n}`,
     nameLabel: "Button name",
-    nameDesc: "A name to tell buttons apart in the toolbar.",
+    nameDesc: "Shown in the toolbar and command list.",
     namePh: "e.g. With weekday, italic",
     dateFormatLabel: "Date style",
     dateSample: "Clean the bathroom",
     iconLabel: "Icon",
-    iconDesc: "How it looks on the toolbar.",
     remove: "Remove",
     cancel: "Cancel",
     removeTitle: (name) => `Remove '${name}'?`,
     removeDesc: "This button's settings will be gone.",
     addDate: "＋ Add date button",
-    addDateDesc: "Adds one more date button. It shows up right away in the command list of toolbar options.",
 
     affTitle: "My affirmations",
     affSub: "Open the note, or draw one random line from it.",
@@ -244,17 +242,13 @@ const STR = {
     textDesc: "Trailing spaces are typed too.",
     textPh: "e.g. - [ ] ",
     addPhrase: "＋ Add phrase button",
-    addPhraseDesc: "Creates one more phrase button. Tap an example below to start fast.",
     exampleLabel: "Quick start",
     examples: [["Checkbox", "- [ ] "], ["Review tag", "#review "], ["Learned", "Learned: "]],
     randomEmpty: "No lines to pick from.",
 
     cmdCopy: "Copy heading section",
     copyTitle: "Heading copy",
-    copySub: "Copies the heading under the cursor and what is below it.",
-    copyHowLabel: "How to use",
-    copyHow1: "Put the cursor under a heading and tap the button. That heading and its sub-content go to your clipboard.",
-    copyHow2: "Paste as usual.",
+    copySub: "Copies the heading at your cursor and everything under it. Paste as usual.",
     copied: (title, n) => `Copied: ${title} (${n} lines)`,
     copyFail: "Could not copy.",
     copyNoHeading: "Put the cursor under a heading first.",
@@ -266,15 +260,21 @@ const STR = {
     affLinesSummary: (n) => `Show lines that can be drawn (${n})`,
 
     affButtonsLabel: "Buttons you get",
-    affOpenDesc: "Opens the note right away.",
-    affShowDesc: "Shows one line as a notice.",
-    affInsertDesc: "Types one line at the cursor.",
     affTestBtn: "Draw one line",
     affTestLabel: "Try it",
 
     hotkeyTitle: "Hotkeys and mobile toolbar",
-    hotkeyDesc: "Hotkeys: Obsidian Settings → Hotkeys, then search for Growth Stamp.",
-    toolbarHint: "Mobile toolbar: Obsidian Settings → Mobile → Toolbar options, then add this plugin's commands.",
+    hotkeyDesc: "Hotkeys: Settings → Hotkeys, then search for Growth Stamp.",
+    toolbarHint: "Mobile toolbar: Settings → Mobile → Toolbar options, then add the commands.",
+
+    pcTitle: "Desktop buttons",
+    pcSub: "Pick buttons to show at the top of each note. Desktop only.",
+    pcPreview: "How the note header will look",
+    pcNone: "No buttons picked",
+    pcCount: (n) => `${n} picked`,
+    pcOrder: "Top of the list goes leftmost. Use the arrows to reorder.",
+    moveUp: "Move up",
+    moveDown: "Move down",
 
     tokens: [
       ["HH", "hour (24h, 2 digits)", "08"],
@@ -308,6 +308,7 @@ const DEFAULTS = {
   rangePreset: 0,
   startedAt: null,
   phrases: [],
+  desktopButtons: ["insert-time", "insert-date-d1", "start-time", "end-time"],
 };
 
 // ───────────── 순수 함수 ─────────────
@@ -361,8 +362,60 @@ module.exports = class GrowthStampPlugin extends obsidian.Plugin {
     for (const [id, svg] of Object.entries(ICONS)) addIcon(id, svg);
     await this.loadSettings();
     this.cmdIds = [];
+    this.headerEls = new WeakMap();
     this.registerCommands();
     this.addSettingTab(new GrowthStampSettingTab(this.app, this));
+    // PC: 노트 위쪽(헤더)에 고른 버튼을 붙임. 새 창이나 탭이 열릴 때마다 다시 확인
+    this.app.workspace.onLayoutReady(() => this.refreshDesktopButtons());
+    this.registerEvent(this.app.workspace.on("layout-change", () => this.refreshDesktopButtons()));
+  }
+
+  onunload() {
+    this.removeDesktopButtons();
+  }
+
+  markdownViews() {
+    return this.app.workspace
+      .getLeavesOfType("markdown")
+      .map((leaf) => leaf.view)
+      .filter((v) => v instanceof MarkdownView);
+  }
+
+  removeDesktopButtons() {
+    for (const view of this.markdownViews()) {
+      const st = this.headerEls.get(view);
+      if (st) st.els.forEach((el) => el.remove());
+      this.headerEls.delete(view);
+    }
+  }
+
+  // 고른 버튼 목록이 바뀐 노트만 다시 그림
+  refreshDesktopButtons() {
+    if (Platform.isMobile || !this.actions) return;
+    const picked = this.settings.desktopButtons || [];
+    // 고른 순서대로 왼쪽부터 놓음
+    const want = picked.map((id) => this.actions.find((a) => a.id === id)).filter(Boolean);
+    const sig = want.map((a) => `${a.id}|${a.name}|${a.icon}`).join(",");
+    for (const view of this.markdownViews()) {
+      const st = this.headerEls.get(view);
+      if (st && st.sig === sig && st.els.every((el) => el.isConnected)) continue;
+      if (st) st.els.forEach((el) => el.remove());
+      // addAction은 앞쪽에 끼워 넣으므로 거꾸로 넣어야 목록 순서대로 보임
+      const els = [...want].reverse().map((a) => {
+        const el = view.addAction(a.icon, a.name, () => this.runAction(view, a));
+        el.addClass("growth-stamp-action");
+        return el;
+      });
+      this.headerEls.set(view, { sig, els });
+    }
+  }
+
+  async runAction(view, a) {
+    const editor = view.editor;
+    if (!editor) return;
+    this.app.workspace.setActiveLeaf(view.leaf, { focus: true });
+    await a.run(editor);
+    if (view.getMode() === "source") editor.focus();
   }
 
   get t() {
@@ -535,8 +588,10 @@ module.exports = class GrowthStampPlugin extends obsidian.Plugin {
   registerCommands() {
     for (const id of this.cmdIds) this.removeCommand(id);
     this.cmdIds = [];
+    this.actions = [];
     const add = (cmd) => {
       this.cmdIds.push(cmd.id);
+      this.actions.push({ id: cmd.id, name: cmd.name, icon: cmd.icon, run: cmd.editorCallback });
       this.addCommand(cmd);
     };
 
@@ -605,6 +660,7 @@ module.exports = class GrowthStampPlugin extends obsidian.Plugin {
       icon: "growth-stamp-sun",
       editorCallback: () => this.openAffirmation(),
     });
+    this.refreshDesktopButtons();
   }
 
   findAffirmation() {
@@ -741,7 +797,7 @@ class GrowthStampSettingTab extends PluginSettingTab {
     box.createDiv({ cls: "kst-tag", text: t.previewLabel });
     box.createDiv({ cls: "kst-preview-cap", text: t.previewRaw });
     const raw = box.createDiv({ cls: "kst-preview-line" });
-    box.createDiv({ cls: "kst-preview-cap", text: t.previewRendered });
+    const renderCap = box.createDiv({ cls: "kst-preview-cap", text: t.previewRendered });
     const rendered = box.createDiv({ cls: "kst-preview-line" });
     const note = box.createDiv({ cls: "kst-preview-note" });
     return {
@@ -749,7 +805,11 @@ class GrowthStampSettingTab extends PluginSettingTab {
         raw.empty();
         raw.createSpan({ cls: "kst-ins", text: inserted });
         raw.createSpan({ text: sample });
-        this.renderMd(rendered, inserted + sample);
+        // 마크다운 기호가 있을 때만 "문서에서 보이는 모습"을 따로 보여 줌
+        const md = /[*_`[]|~~|==|^\s*(?:[-+>#]|\d+\.)\s/.test(inserted);
+        renderCap.toggleClass("is-hidden", !md);
+        rendered.toggleClass("is-hidden", !md);
+        if (md) this.renderMd(rendered, inserted + sample);
         note.setText(noteText || "");
         note.toggleClass("is-hidden", !noteText);
       },
@@ -785,7 +845,7 @@ class GrowthStampSettingTab extends PluginSettingTab {
     this.onTimeChange = null;
 
     // ── 언어 ──
-    const langBody = this.section(containerEl, t.langLabel, t.langDesc);
+    const langBody = this.section(containerEl, t.langLabel, null);
     const seg = langBody.createDiv({ cls: "kst-group" });
     [["ko", "한국어"], ["en", "English"]].forEach(([code, label]) => {
       const b = seg.createEl("button", { text: label });
@@ -899,7 +959,6 @@ class GrowthStampSettingTab extends PluginSettingTab {
 
     const addRow = db.createDiv({ cls: "kst-add" });
     const addBtn = addRow.createEl("button", { cls: "kst-btn mod-cta", text: t.addDate });
-    addRow.createDiv({ cls: "kst-desc", text: t.addDateDesc });
     addBtn.addEventListener("click", async () => {
       p.settings.dates.push({
         id: "d" + Date.now().toString(36),
@@ -917,7 +976,6 @@ class GrowthStampSettingTab extends PluginSettingTab {
     p.settings.phrases.forEach((inst, i) => this.phraseCard(pb, inst, i));
     const addPhraseRow = pb.createDiv({ cls: "kst-add" });
     const addPhraseBtn = addPhraseRow.createEl("button", { cls: "kst-btn mod-cta", text: t.addPhrase });
-    addPhraseRow.createDiv({ cls: "kst-desc", text: t.addPhraseDesc });
     const addPhrase = async (name, text) => {
       p.settings.phrases.push({
         id: "p" + Date.now().toString(36),
@@ -938,19 +996,17 @@ class GrowthStampSettingTab extends PluginSettingTab {
     }
 
     // ── ⑤ 헤딩 복사 ──
-    const cb = this.section(containerEl, t.copyTitle, t.copySub, 5);
-    const howF = this.field(cb, t.copyHowLabel, t.copyHow1);
-    howF.createDiv({ cls: "kst-desc", text: t.copyHow2 });
+    this.section(containerEl, t.copyTitle, t.copySub, 5).remove();
 
     // ── ⑥ 내 확언 ──
     const ab = this.section(containerEl, t.affTitle, t.affSub, 6);
     const affF = this.field(ab, t.affPathLabel, t.affPathDesc);
     const status = ab.createDiv({ cls: "kst-status" });
-    const ruleF = this.field(ab, t.affRuleLabel, t.affRule1);
-    ruleF.addClass("kst-gap-top");
-    ruleF.createDiv({ cls: "kst-desc", text: t.affRule2 });
-    ruleF.createDiv({ cls: "kst-desc", text: t.affRule3 });
-    const candidates = ruleF.createDiv();
+    const ruleD = ab.createEl("details", { cls: "kst-tokens" });
+    ruleD.createEl("summary", { text: t.affRuleLabel });
+    const ruleBox = ruleD.createDiv({ cls: "kst-rule-box" });
+    [t.affRule1, t.affRule2, t.affRule3].forEach((r) => ruleBox.createDiv({ text: r }));
+    const candidates = ab.createDiv();
     const refreshAff = async () => {
       const has = (p.settings.affirmationPath || "").trim().length > 0;
       const ok = has && !!p.findAffirmation();
@@ -989,15 +1045,13 @@ class GrowthStampSettingTab extends PluginSettingTab {
     btnF.addClass("kst-gap-top");
     const list = btnF.createDiv({ cls: "kst-cmd-list" });
     [
-      ["growth-stamp-sun", t.cmdAff, t.affOpenDesc],
-      ["growth-stamp-dice", t.cmdRandomShow, t.affShowDesc],
-      ["growth-stamp-sparkle", t.cmdRandomInsert, t.affInsertDesc],
-    ].forEach(([icon, name, desc]) => {
+      ["growth-stamp-sun", t.cmdAff],
+      ["growth-stamp-dice", t.cmdRandomShow],
+      ["growth-stamp-sparkle", t.cmdRandomInsert],
+    ].forEach(([icon, name]) => {
       const row = list.createDiv({ cls: "kst-cmd-row" });
       setIcon(row.createDiv({ cls: "kst-cmd-icon" }), icon);
-      const text = row.createDiv({ cls: "kst-cmd-text" });
-      text.createDiv({ cls: "kst-cmd-name", text: name });
-      text.createDiv({ cls: "kst-desc", text: desc });
+      row.createDiv({ cls: "kst-cmd-name", text: name });
     });
 
     const testF = this.field(ab, t.affTestLabel, null);
@@ -1010,10 +1064,73 @@ class GrowthStampSettingTab extends PluginSettingTab {
       testBox.setText(line);
     });
 
+    // ── ⑦ PC 버튼 ──
+    this.desktopSection(containerEl, t);
+
     // ── 단축키 ──
     const hb = this.section(containerEl, t.hotkeyTitle, null);
     hb.createDiv({ cls: "kst-desc", text: t.hotkeyDesc });
     hb.createDiv({ cls: "kst-desc kst-gap", text: t.toolbarHint });
+  }
+
+  // 노트 위쪽 버튼 고르기: 위에는 미리보기 막대, 아래에는 켜고 끄는 목록
+  desktopSection(containerEl, t) {
+    const p = this.plugin;
+    const body = this.section(containerEl, t.pcTitle, t.pcSub, 7);
+    const bar = body.createDiv({ cls: "kst-header-bar" });
+    bar.setAttr("aria-label", t.pcPreview);
+    const barIcons = bar.createDiv({ cls: "kst-header-icons" });
+    const fixed = bar.createDiv({ cls: "kst-header-fixed" });
+    setIcon(fixed.createDiv(), "book-open");
+    setIcon(fixed.createDiv(), "more-vertical");
+    const cap = body.createDiv({ cls: "kst-preview-cap kst-bar-cap" });
+    body.createDiv({ cls: "kst-desc kst-pick-hint", text: t.pcOrder });
+
+    const list = body.createDiv({ cls: "kst-pick-list" });
+    const save = async (ids) => {
+      p.settings.desktopButtons = ids;
+      await p.saveSettings();
+      p.refreshDesktopButtons();
+      refresh();
+    };
+    // 고른 버튼은 위쪽에 고른 순서대로, 화살표로 순서를 바꿈. 안 고른 버튼은 아래쪽
+    const refresh = () => {
+      const all = p.actions || [];
+      const picked = (p.settings.desktopButtons || []).filter((id) => all.some((a) => a.id === id));
+      const on = picked.map((id) => all.find((a) => a.id === id));
+      const off = all.filter((a) => !picked.includes(a.id));
+      barIcons.empty();
+      on.forEach((a) => setIcon(barIcons.createDiv({ cls: "kst-header-icon" }), a.icon));
+      if (on.length === 0) barIcons.createSpan({ cls: "kst-header-empty", text: t.pcNone });
+      cap.setText(on.length ? `${t.pcPreview} (${t.pcCount(on.length)})` : t.pcPreview);
+      list.empty();
+      [...on, ...off].forEach((a) => {
+        const isOn = picked.includes(a.id);
+        const idx = picked.indexOf(a.id);
+        const row = list.createDiv({ cls: "kst-pick" });
+        row.toggleClass("is-selected", isOn);
+        const toggle = row.createDiv({ cls: "kst-pick-main" });
+        toggle.createDiv({ cls: "kst-check" });
+        setIcon(toggle.createDiv({ cls: "kst-cmd-icon" }), a.icon);
+        toggle.createDiv({ cls: "kst-pick-name", text: a.name });
+        toggle.addEventListener("click", () => save(isOn ? picked.filter((x) => x !== a.id) : [...picked, a.id]));
+        if (!isOn) return;
+        const move = (d) => {
+          const ids = [...picked];
+          [ids[idx], ids[idx + d]] = [ids[idx + d], ids[idx]];
+          save(ids);
+        };
+        [["chevron-up", -1, t.moveUp], ["chevron-down", 1, t.moveDown]].forEach(([icon, d, label]) => {
+          const btn = row.createEl("button", { cls: "kst-move clickable-icon" });
+          setIcon(btn, icon);
+          btn.setAttr("aria-label", label);
+          const can = idx + d >= 0 && idx + d < picked.length;
+          btn.disabled = !can;
+          if (can) btn.addEventListener("click", () => move(d));
+        });
+      });
+    };
+    refresh();
   }
 
   textArea(parent, value, placeholder, onInput) {
@@ -1072,7 +1189,7 @@ class GrowthStampSettingTab extends PluginSettingTab {
     const refresh = () => prev.set(inst.text || "", t.dateSample);
     refresh();
 
-    const iconF = this.field(card, t.iconLabel, t.iconDesc);
+    const iconF = this.field(card, t.iconLabel, null);
     const iconRow = iconF.createDiv({ cls: "kst-row" });
     const iconBtns = PHRASE_ICONS.map((id) => {
       const b = iconRow.createEl("button", { cls: "kst-icon-btn" });
@@ -1166,7 +1283,7 @@ class GrowthStampSettingTab extends PluginSettingTab {
     };
     refresh();
 
-    const iconF = this.field(card, t.iconLabel, t.iconDesc);
+    const iconF = this.field(card, t.iconLabel, null);
     const iconRow = iconF.createDiv({ cls: "kst-row" });
     const iconBtns = DATE_ICONS.map((id) => {
       const b = iconRow.createEl("button", { cls: "kst-icon-btn" });
